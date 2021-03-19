@@ -5,35 +5,46 @@
     apt:
       update_cache:
 
+  - name: Upgrade system
+    become: true
+    apt:
+      upgrade: dist
+    notify: reboot server
+
+  - name: Install some packages
+    become: true
+    apt:
+      name: ['wget', 'vim', 'git', 'build-essential']
+
   - name: Install Maven
-      become: yes
-      apt:
-        name: maven
-        state: present
+    become: true
+    apt:
+      name: maven
+      state: present
 
   - name: Install OpenJDK Java 11
-    become: yes
+    become: true
     apt:
       name: openjdk-11-jre
       state: present
 
   - name: Download and extract OpenJFX 16
-    become: yes
+    become: true
     tags: javafxdownload
     unarchive:
       src: "https://gluonhq.com/download/javafx-linux-arm32-drm-sdk/"
       dest: "/opt/"
       mode: 0755
-      remote_src: yes
+      remote_src: true
 
   - name: Install XServer to be able to run JavaFX application in kiosk mode
     become: yes
     apt:
       name: ['xserver-xorg','x11-xserver-utils','xinit','lightdm','openbox']
       state: present
+    notify: reboot server
 
-  - name: Reboot
-    become: yes
-    reboot:
-
-
+  handlers:
+    - name: reboot server
+      become: true
+      reboot:
