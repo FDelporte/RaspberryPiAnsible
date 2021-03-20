@@ -4,21 +4,27 @@ A few ansible scripts to configure a new Raspberry Pi.
 
 ## Prerequisites
 
-1. Prepare an SD card with the [Raspberry Pi Imager tool](https://www.raspberrypi.org/software/) 
-   and select **"Raspberry Pi OS (32-bit)"**. This is a "minimal" desktop version, and we will 
-   install all extra tools needed with one of the provided scripts in this repository.
-   * When you want to create a **"kiosk mode" JavaFX application** which only shows the JavaFX application, 
+1. Download the [Raspberry Pi Imager tool](https://www.raspberrypi.org/software/). 
+   Make sure you have version 1.6 (or newer).
+2. Insert a (new) SD card into your computer (8GB works, but better 16GB or more).
+3. In the Imager tool select **"Raspberry Pi OS (32-bit)"**. This is a "minimal" desktop version, and we will 
+   install all extra tools needed with one of the provided scripts in this repository later.
+   * But **when you want to create a "kiosk mode" JavaFX application** which only shows the JavaFX application, 
     and no other desktop please select **"Raspberry Pi OS (32-bit)" > "Raspberry Pi OS Lite (32-bit)"**.
 
 ![Screenshot of the Raspberry Pi Imager tool](docs/imager.png)
 
-2. Optional: before inserting the SD-Card, add an empty file `ssh` to the root of the boot partition on the SD-Card, so that SSH is already enabled.
+4. While on the main screen of the Imager tool, use the hidden extra menu with "CTRL+SHIFT+X" for extra settings
+   (for more info see ["Raspberry Pi Imager update to v1.6"](https://www.raspberrypi.org/blog/raspberry-pi-imager-update-to-v1-6/)).
+   * Enable SSH and set a password for the "pi" user (pick one which is more secure that the one in the screenshot)
+   * If you want to use Wifi instead of wired network connection, provide the SSID and Password
+   * Set the locale settings to fit your region, language and keyboard layout
 
-3. When the SD card is ready, put it in your Raspberry Pi, power it up and follow the on-screen 
-   step-by-step to select your language, configure Wifi, install updates, etc.
+5. Hit the "Choose Storage" button to select your SD card.
 
-4. In the terminal, run `sudo raspi-config`, go to `Interface Options`, and enable SSH, if you didn't already add the `ssh` file to the boot partition
+6. Hit the "Write" button to start writing the OS and settings to the SD card.
 
+7. When the writing is finished, you can insert the SD card into your Raspberry Pi.
 
 ## Use Ansible to install additional tools
 
@@ -33,18 +39,22 @@ $ git clone https://github.com/FDelporte/RaspberryPiAnsible.git
 $ cd RaspberryPiAnsible
 ```
 
-4. Create the inventory file `hosts` for which the ansible scripts will run:
+2. Create the inventory file `hosts` for which the ansible scripts will run, the IP address (`ansible_host`) and
+   password (two times as `ansible_ssh_pass` and `ansible_sudo_pass`) needs to be the one of the Raspberry Pi:
 
 ```
 all:
   vars:
     ansible_user: pi
   hosts: 
-    crowpi:
+    my_raspberry_pi:
       ansible_host: 10.0.110.100
+      ansible_ssh_pass: "raspberry"
+      ansible_sudo_pass: "raspberry"
 ```
 
-4. You can now execute one of the ansible scripts with the following command:
+3. You can now execute one of the ansible scripts with the following command:
+
 ```
 ansible-playbook -i hosts <playbook-file>.yml
 ```
@@ -59,6 +69,7 @@ $ sudo apt install -y ansible sshpass
 ```
 
 2. Now clone this project:
+
 ```
 $ git clone https://github.com/FDelporte/RaspberryPiAnsible.git
 $ cd RaspberryPiAnsible
@@ -71,11 +82,12 @@ localhost
 ```
 
 4. You can now execute one of the ansible scripts with the following command:
+
 ```
 ansible-playbook -c local -i hosts <playbook-file>.yml
 ```
 
-## Run the ansible scripts
+## Ansible scripts in this project
 
 This project provides multiple scripts, depending on the work you want to do. Run one or more
 of these scripts.
@@ -84,3 +96,32 @@ of these scripts.
 | :---              | :---:     | :---:     | :---:     | :---:     | :---                  |
 | javafx.yml        | Yes       | Yes       | Yes       | Yes       |                       |
 | javafx-kiosk.yml  | Yes       | Yes       | Yes       | -         | X11 for kiosk mode    |
+
+## Testing the kiosk mode
+
+When you started with a server-edition (without Desktop) and used the "javafx-kiosk.yml" Ansible script,
+you are ready to run a JavaFX application in kiosk mode. The Raspberry Pi is started with a black screen and the cursor
+but you won't be able to do much...
+
+To try out a JavaFX application, connect via SSH and run the following commands to 
+
+1. Download the sources to your Raspberry Pi
+2. Move to the downloaded directory
+3. Build the project
+4. Move to the target > distribution directory
+5. Run the application with the provided run-script
+
+```
+ git clone https://github.com/pi4j/pi4j-example-javafx
+ cd pi4j-example-javafx
+ mvn package
+ cd target/distribution
+ sudo ./run.sh
+```
+
+Remark: if you run these commands from an SSH terminal, you may need to replace the last command with the 
+following one to tell your system where the application must be displayed:
+
+```
+DISPLAY=:0 sudo ./run.sh
+```
