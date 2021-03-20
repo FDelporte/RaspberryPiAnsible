@@ -12,13 +12,21 @@ A few ansible scripts to configure a new Raspberry Pi.
    * But **when you want to create a "kiosk mode" JavaFX application** which only shows the JavaFX application, 
     and no other desktop please select **"Raspberry Pi OS (32-bit)" > "Raspberry Pi OS Lite (32-bit)"**.
 
-![Screenshot of the Raspberry Pi Imager tool](docs/imager.png)
+   ![Screenshot of the Raspberry Pi Imager tool](docs/imager.png)
 
 4. While on the main screen of the Imager tool, use the hidden extra menu with "CTRL+SHIFT+X" for extra settings
    (for more info see ["Raspberry Pi Imager update to v1.6"](https://www.raspberrypi.org/blog/raspberry-pi-imager-update-to-v1-6/)).
    * Enable SSH and set a password for the "pi" user (pick one which is more secure that the one in the screenshot)
+
+   ![Screenshot of the Raspberry Pi Imager tool](docs/settings-ssh.png)
+   
    * If you want to use Wifi instead of wired network connection, provide the SSID and Password
+
+   ![Screenshot of the Raspberry Pi Imager tool](docs/settings-wifi.png)
+   
    * Set the locale settings to fit your region, language and keyboard layout
+
+   ![Screenshot of the Raspberry Pi Imager tool](docs/settings-locale.png)
 
 5. Hit the "Choose Storage" button to select your SD card.
 
