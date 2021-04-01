@@ -1,0 +1,10 @@
+- hosts: all
+  tasks:
+    - name: Minimal example
+      command: git clone https://github.com/Pi4J/pi4j-example-minimal.git /home/pi/pi4j/pi4j-example-minimal
+    - name: CrowPi example
+      command: git clone https://github.com/Pi4J/pi4j-example-crowpi.git /home/pi/pi4j/pi4j-example-crowpi
+    - name: JavaFX example
+      command: git clone https://github.com/Pi4J/pi4j-example-javafx.git /home/pi/pi4j/pi4j-example-javafx
+    - name: JavaFX FXGL example
+      command: git clone https://github.com/Pi4J/pi4j-example-fxgl.git /home/pi/pi4j/pi4j-example-fxgl

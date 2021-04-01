@@ -9,8 +9,6 @@ A few ansible scripts to configure a new Raspberry Pi.
 2. Insert a (new) SD card into your computer (8GB works, but better 16GB or more).
 3. In the Imager tool select **"Raspberry Pi OS (32-bit)"**. This is a "minimal" desktop version, and we will 
    install all extra tools needed with one of the provided scripts in this repository later.
-   * But **when you want to create a "kiosk mode" JavaFX application** which only shows the JavaFX application, 
-    and no other desktop please select **"Raspberry Pi OS (32-bit)" > "Raspberry Pi OS Lite (32-bit)"**.
 
    ![Screenshot of the Raspberry Pi Imager tool](docs/imager.png)
 
@@ -48,7 +46,7 @@ $ cd RaspberryPiAnsible
 ```
 
 2. Create the inventory file `hosts` for which the ansible scripts will run, the IP address (`ansible_host`) and
-   password (two times as `ansible_ssh_pass` and `ansible_sudo_pass`) needs to be the one of the Raspberry Pi:
+   password (two times as `ansible_ssh_pass` and `ansible_sudo_pass`) needs to be the one of your Raspberry Pi:
 
 ```
 all:
@@ -59,6 +57,7 @@ all:
       ansible_host: 10.0.110.100
       ansible_ssh_pass: "raspberry"
       ansible_sudo_pass: "raspberry"
+      ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
 ```
 
 3. You can now execute one of the ansible scripts with the following command:
@@ -100,11 +99,16 @@ ansible-playbook -c local -i hosts <playbook-file>.yml
 This project provides multiple scripts, depending on the work you want to do. Run one or more
 of these scripts.
 
-| Script            | Java      | JavaFX    | Maven     | VSC       | Extra                 |
-| :---              | :---:     | :---:     | :---:     | :---:     | :---                  |
-| javafx.yml        | Yes       | Yes       | Yes       | Yes       |                       |
-| javafx-kiosk.yml  | Yes       | Yes       | Yes       | -         | X11 for kiosk mode    |
-
+* all_for_java.yml
+   * Full OS upgrade
+   * Installs packages: wget, vim, git, build-essential
+   * For Java development: Maven, Java OpenJDK 11, JavaFX 17, Maven
+   * IDE: Visual Studio Code
+* auto_login.yml
+   * Changes raspi-config settings to automatically login at startup (no user/password screen)
+* clone_pi4J_examples.yml
+   * Clone the Pi4J V2 example projects to the directory /home/pi/pi4j/
+   
 ## Testing the kiosk mode
 
 When you started with a server-edition (without Desktop) and used the "javafx-kiosk.yml" Ansible script,
@@ -120,8 +124,7 @@ To try out a JavaFX application, connect via SSH and run the following commands 
 5. Run the application with the provided run-script
 
 ```
- git clone https://github.com/pi4j/pi4j-example-javafx
- cd pi4j-example-javafx
+ cd /home/pi/pi4j/pi4j-example-javafx
  mvn package
  cd target/distribution
  sudo ./run.sh

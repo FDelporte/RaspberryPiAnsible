@@ -1,0 +1,11 @@
+- hosts: all
+  tasks:
+  - name: Automatic login
+    become: yes
+    command: "raspi-config nonint do_boot_behaviour B4"
+    notify: reboot server
+
+  handlers:
+    - name: reboot server
+      become: true
+      reboot:
