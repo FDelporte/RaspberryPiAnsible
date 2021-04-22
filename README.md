@@ -136,3 +136,16 @@ following one to tell your system where the application must be displayed:
 ```
 DISPLAY=:0 sudo ./run.sh
 ```
+
+### Switching from Desktop mode to Kiosk mode
+
+```
+sudo mv /opt/vc /opt/dontusevc
+sudo /sbin/init 3
+```
+
+#### Switching back to Desktop mode
+
+```
+sudo /sbin/init 5
+```
