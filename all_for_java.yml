@@ -40,7 +40,6 @@
   - name: Rename the unpacked JavaFX 17 directory to consistently use the same location across projects
     become: true
     command: mv /opt/javafx-sdk-17/ /opt/arm32fb-sdk/
-    notify: reboot server
 
   - name: Install Visual Studio Code
     become: true
