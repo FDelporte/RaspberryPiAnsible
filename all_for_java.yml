@@ -25,7 +25,7 @@
   - name: Install OpenJDK Java 11
     become: true
     apt:
-      name: openjdk-11-jre
+      name: openjdk-11-jdk
       state: present
 
   - name: Download and extract OpenJFX 17
